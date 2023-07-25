@@ -43,5 +43,7 @@ python run.py
 
 ## Contact
 If you have any questions or you just want to chat, never hesitate to reach out!
+
 Telegram: @candyflipline
+
 Email: taequn@gmail.com
