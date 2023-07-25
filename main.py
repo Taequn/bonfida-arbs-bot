@@ -1,28 +1,29 @@
 import streamlit as st
-from utils.misc import CATEGORIES_DICTIONARY
-from utils.methods import get_arbs_me_bonfida, convert_json_to_df
+import pandas as pd
+from utils.constants import CATEGORIES_DICTIONARY, CATEGORIES_DICTIONARY_INVERTED
+from utils.methods import run_arbs_parse, dataframe_prettify
 
-#change the tab title
-st.set_page_config(page_title="Bonfida Arbitrage Finding Tool")
-st.title("Bonfida Arbitrage Finding Tool")
+st.set_page_config(page_title="Bonfida Arb Opportunities", page_icon=":moneybag:")
 
-st.sidebar.title("Settings")
-st.sidebar.write("Choose the category you want to find arbitrage opportunities for")
-# For category, select the key from the dictionary
-CATEGORIES = list(CATEGORIES_DICTIONARY.keys())
-category = st.sidebar.selectbox("Category", CATEGORIES)
+@st.cache_data
+def load_data():
+    df = pd.read_csv("data/best_bids_with_me.csv")
+    return df
 
-# category = st.sidebar.selectbox("Category", CATEGORIES)
-st.sidebar.write("Choose the maximum bid price")
-max_bid = st.sidebar.number_input(
-    "Maximum bid price", min_value=0.0, max_value=1000000.0, value=1.0, step=0.01
+df = load_data()
+df_pretty = dataframe_prettify(df)
+
+st.title("Bonfida Arb Opportunities")
+st.markdown(
+    "This app shows the best bid for each category on Bonfida. \
+        It also shows the best bid on Magic Eden for each category. \
+            The expected profit is calculated by subtracting the Magic Eden price from the Bonfida price. \
+                The data is updated on demand."
 )
+st.dataframe(df_pretty, width=1000, hide_index=True)
 
-# use the methods from utils/methods.py to get the json and convert it to a dataframe
-try:
-    selected_category = CATEGORIES_DICTIONARY[category]  # type: ignore
+st.sidebar.title("Options")
+st.sidebar.markdown("Press the button to update the data.")
+st.sidebar.button("Update Data", on_click=run_arbs_parse)
+st.sidebar.text(f'Updated last time:\n{df.iloc[0]["timestamp"]}')
 
-    json_input = get_arbs_me_bonfida(selected_category, max_bid)  # type: ignore
-    convert_json_to_df(json_input)
-except Exception as e:
-    st.error(e)
