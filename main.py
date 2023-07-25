@@ -5,7 +5,6 @@ from utils.methods import run_arbs_parse, dataframe_prettify
 
 st.set_page_config(page_title="Bonfida Arb Opportunities", page_icon=":moneybag:")
 
-@st.cache_data
 def load_data():
     df = pd.read_csv("data/best_bids_with_me.csv")
     return df
