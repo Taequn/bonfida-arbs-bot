@@ -13,6 +13,7 @@ from colorama import Style, init, Fore
 
 init_message()
 
+
 async def run_bot():
     while True:
         try:
@@ -26,12 +27,18 @@ async def run_bot():
                 print_out_dim("Subscribed to the program")
                 first_resp = await websocket.recv()
                 async for idx, msg in enumerate(websocket):
+                    print_out_dim("Pulled an update!")
+                    print_out_dim("Updating...")
                     run_arbs_parse()
                     df = display_data_tabulate()
                     check_for_positives(df)
         except asyncio.exceptions.TimeoutError:
             print_out_dim("Connection timed out. Retrying...")
             continue
+        except Exception as e:
+            print_out_dim("Connection error. Reconnecting...")
+            continue
+    
 
 
 asyncio.run(run_bot())
