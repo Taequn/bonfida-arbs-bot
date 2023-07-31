@@ -136,9 +136,3 @@ def init_message():
     print(
         f" \n{Fore.BLUE}{Style.BRIGHT}BONFIDA ARBS CLI BOT{Style.RESET_ALL}\n \nGithub: Taequn\nTwitter: @candyflipline\nTelegram: @candyflipline\n"
     )
-
-
-if __name__ == "__main__":
-    # run_arbs_parse()
-    #get_all_arbs()
-    print(get_arbs_me_bonfida('english-nouns', 90000))
