@@ -20,7 +20,9 @@ async def run_bot():
             df = display_data_tabulate()
             check_for_positives(df)
             print_out_dim("Connecting to the websocket")
-            program_pub_key = Pubkey.from_string("85iDfUvr3HJyLM2zcq5BXSiDvUWfw6cSE1FfNBo8Ap29")
+            program_pub_key = Pubkey.from_string(
+                "85iDfUvr3HJyLM2zcq5BXSiDvUWfw6cSE1FfNBo8Ap29"
+            )
             async with connect("wss://api.mainnet-beta.solana.com") as websocket:
                 print_out_dim("Connected to the websocket")
                 await websocket.account_subscribe(program_pub_key)
@@ -38,7 +40,6 @@ async def run_bot():
         except Exception as e:
             print_out_dim("Connection error. Reconnecting...")
             continue
-    
 
 
 asyncio.run(run_bot())

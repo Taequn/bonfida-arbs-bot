@@ -26,6 +26,7 @@ def get_arbs_me_bonfida(category: str, max_bid: int):
     url = API_URL + f"/v2/arb/me-bonfida?category={category}&max_bid={max_bid}"
     r = requests.get(url)
     json_object = r.json()
+    print(json_object)
     df = pd.DataFrame(json_object)
     return df
 
@@ -93,21 +94,20 @@ def display_data_tabulate():
         print_out_dim("No data found. Updating...")
         run_arbs_parse()
         df = pd.read_csv("data/best_bids_with_me.csv")
-    
+
     last_updated = df["timestamp"].iloc[0]
     last_updated = datetime.strptime(last_updated, "%Y-%m-%d %H:%M:%S")
-    #if last_updated more than 20 minutes ago, run_arbs_parse()
+    # if last_updated more than 20 minutes ago, run_arbs_parse()
     if last_updated < datetime.now() - timedelta(minutes=20):
         print_out_dim("Data is more than 20 minutes old. Updating...")
         print_out_dim("This will take ~2 minutes.")
         run_arbs_parse()
         df = pd.read_csv("data/best_bids_with_me.csv")
         last_updated = df["timestamp"].iloc[0]
-    
-    
+
     df_pretty = dataframe_prettify(df)
     print_out_dim(tabulate(df_pretty, headers="keys", tablefmt="psql", showindex=False))  # type: ignore
-    
+
     print_out_dim(f"Last updated: {last_updated}")
     return df
 
@@ -139,4 +139,6 @@ def init_message():
 
 
 if __name__ == "__main__":
-    run_arbs_parse()
+    # run_arbs_parse()
+    #get_all_arbs()
+    print(get_arbs_me_bonfida('english-nouns', 90000))
