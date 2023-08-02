@@ -9,7 +9,6 @@ from utils.methods import (
     print_out_dim,
     init_message,
 )
-from colorama import Style, init, Fore
 
 init_message()
 
