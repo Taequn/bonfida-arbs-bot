@@ -24,7 +24,7 @@ async def run_bot():
             )
             async with connect("wss://api.mainnet-beta.solana.com") as websocket:
                 print_out_dim("Connected to the websocket")
-                await websocket.account_subscribe(program_pub_key)
+                await websocket.program_subscribe(program_pub_key)
                 print_out_dim("Subscribed to the program")
                 first_resp = await websocket.recv()
                 async for idx, msg in enumerate(websocket):
