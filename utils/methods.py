@@ -8,10 +8,14 @@ import logging
 from tabulate import tabulate
 import webbrowser
 from colorama import Style, init, Fore
+from rich.console import Console
+from rich.table import Table
+import os
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
+console = Console()
 
 def get_all_arbs() -> pd.DataFrame:
     """
@@ -180,8 +184,22 @@ def display_data_tabulate():
         df = pd.read_csv("data/best_bids_with_me.csv")
         last_updated = df["timestamp"].iloc[0]
 
+    # Clear console
+    os.system('cls' if os.name == 'nt' else 'clear')
+
     df_pretty = dataframe_prettify(df)
-    print_out_dim(tabulate(df_pretty, headers="keys", tablefmt="psql", showindex=False))  # type: ignore
+
+    # Create a table
+    table = Table(show_header=True, header_style="bold magenta")
+    for col in df_pretty.columns:
+        table.add_column(col)
+
+    # Add rows to the table
+    for _, row in df_pretty.iterrows():
+        row_as_str = row.apply(str).tolist()
+        table.add_row(*row_as_str)
+
+    console.print(table)
 
     print_out_dim(f"Last updated: {last_updated}")
     return df
