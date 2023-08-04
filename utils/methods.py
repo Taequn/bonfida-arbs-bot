@@ -5,7 +5,6 @@ import streamlit as st
 from utils.constants import CATEGORIES_DICTIONARY_INVERTED, CATEGORIES_DICTIONARY
 from datetime import datetime, timedelta
 import logging
-from tabulate import tabulate
 import webbrowser
 from colorama import Style, init, Fore
 from rich.console import Console
@@ -124,6 +123,8 @@ def dataframe_prettify(df: pd.DataFrame) -> pd.DataFrame:
     """
     # select columns: category, sol_price, domain_name, me_price, expected_profit
     df = df[["category", "sol_price", "domain_name", "me_price", "expected_profit"]]
+    df = df.round(2)
+    
     # rename columns
     df = df.rename(
         columns={
@@ -134,6 +135,7 @@ def dataframe_prettify(df: pd.DataFrame) -> pd.DataFrame:
             "expected_profit": "Expected Profit",
         }
     )
+    
     df = df.sort_values(by="Expected Profit", ascending=False)
 
     return df
