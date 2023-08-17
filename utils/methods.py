@@ -16,6 +16,7 @@ logging.basicConfig(level=logging.INFO)
 
 console = Console()
 
+
 def get_all_arbs() -> pd.DataFrame:
     """
     Makes a request to the API and returns a dataframe of all the best bids for each category
@@ -70,8 +71,8 @@ def get_all_me_listings(list_of_categories: list) -> pd.DataFrame:
         df = pd.DataFrame(json_object)
 
         # Sort by 'me_price' and drop duplicates based on 'category'
-        df.sort_values('me_price', inplace=True)
-        df.drop_duplicates(subset='category', keep='first', inplace=True)
+        df.sort_values("me_price", inplace=True)
+        df.drop_duplicates(subset="category", keep="first", inplace=True)
 
         dfs.append(df)
 
@@ -124,7 +125,7 @@ def dataframe_prettify(df: pd.DataFrame) -> pd.DataFrame:
     # select columns: category, sol_price, domain_name, me_price, expected_profit
     df = df[["category", "sol_price", "domain_name", "me_price", "expected_profit"]]
     df = df.round(2)
-    
+
     # rename columns
     df = df.rename(
         columns={
@@ -135,7 +136,7 @@ def dataframe_prettify(df: pd.DataFrame) -> pd.DataFrame:
             "expected_profit": "Expected Profit",
         }
     )
-    
+
     df = df.sort_values(by="Expected Profit", ascending=False)
 
     return df
@@ -174,7 +175,7 @@ def display_data_tabulate():
         )  # If file doesn't exist, update the data and create it
         run_arbs_parse()
         df = pd.read_csv("data/best_bids_with_me.csv")
-    
+
     last_updated = df["timestamp"].iloc[0]  # Check when the data was updated
     last_updated = datetime.strptime(last_updated, "%Y-%m-%d %H:%M:%S.%f")
     if last_updated < datetime.now() - timedelta(
@@ -187,7 +188,7 @@ def display_data_tabulate():
         last_updated = df["timestamp"].iloc[0]
 
     # Clear console
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system("cls" if os.name == "nt" else "clear")
 
     df_pretty = dataframe_prettify(df)
 
