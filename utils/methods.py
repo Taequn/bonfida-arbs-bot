@@ -10,6 +10,8 @@ from colorama import Style, init, Fore
 from rich.console import Console
 from rich.table import Table
 import os
+from notifications.telegram_bot import BonfidaTelegramBot
+import asyncio
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -208,17 +210,28 @@ def display_data_tabulate():
     return df
 
 
-def check_for_positives(df: pd.DataFrame):
+async def check_for_positives(df: pd.DataFrame, telegram_status: bool = False):
     """
     Checks if there are any positive arbs, if there are, open the browser to the Solana Name Service page
+    If telegram_status is True, send a message via the telegram bot
 
-    Input: dataframe
+    Input: dataframe, telegram_status
     Returns: None
     """
-    if df["expected_profit"].max() > 0:
-        print_out_dim("Positive arbs found")
-        name = df["Domain Name"].iloc[0]
+    #sort df
+    df = df.sort_values(by="expected_profit", ascending=False)
+    
+    name = df["domain_name"].iloc[0]
+    profit = df["expected_profit"].iloc[0]
+    if df["expected_profit"].max() > 0:  # if there are any positive arbs
         url = "https://sns.id/search?search=" + name.strip()
+        message = f"We found you a positive arbs opportunity with {name}! \n\n Place your bid here: {url}! \n\n Expected profit: {profit} SOL"
+        print_out_dim(message)
+
+        if telegram_status:
+            bot = BonfidaTelegramBot()
+            await bot.send_message(message)
+
         webbrowser.open(url)
     else:
         print_out_dim("No positive arbs found")
