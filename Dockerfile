@@ -8,4 +8,4 @@ COPY . /usr/src/app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Run
-CMD ["python", "./bot.py"]
+CMD ["python", "./cli.py"]

@@ -19,9 +19,10 @@ def init_tg_bot() -> bool:
         while True:
             answer = input()
             if answer == "y":
-                create_settings_file()
+                create_settings_file(telegram_use=True)
                 break
             elif answer == "n":
+                create_settings_file(telegram_use=False)
                 print_out_dim("Telegram bot will not be used.")
                 return False
             else:
@@ -30,6 +31,10 @@ def init_tg_bot() -> bool:
     with open("settings.json", "r") as f:
         info = json.load(f)
 
+    if info["USE_TELEGRAM"] == False:
+        print_out_dim("Telegram bot will not be used.")
+        return False
+    
     if info["TELEGRAM_BOT_API"] == "":
         # Throw an exception if the API key is not found
         raise ValueError(
@@ -57,7 +62,7 @@ def init_tg_bot() -> bool:
     return True
 
 
-def create_settings_file() -> None:
+def create_settings_file(telegram_use: bool) -> None:
     """
     Creates a settings.json file with the default settings
 
@@ -65,7 +70,7 @@ def create_settings_file() -> None:
     Returns: None
     """
     # {"TELEGRAM_BOT_API": "YOUR_API_KEY", "TELEGRAM_CHAT_ID": ""}
-    settings = {"TELEGRAM_BOT_API": "", "TELEGRAM_CHAT_ID": ""}
+    settings = {"TELEGRAM_BOT_API": "", "TELEGRAM_CHAT_ID": "", "USE_TELEGRAM": telegram_use}
     with open("settings.json", "w") as f:
         json.dump(settings, f, indent=4)
     print_out_dim(
