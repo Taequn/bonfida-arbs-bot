@@ -42,8 +42,8 @@ python cli.py
 
 ## How it works
 
-1. The script uses Bonafida /arbs/ endpoints to pull the information on the category-wide bits and compare those to domains sold on ME.
-2. It uses [solana.py](https://michaelhly.github.io/solana-py/) to set up a WebSocket connection to Bonafida program.
+1. The script uses Bonfida /arbs/ endpoints to pull the information on the category-wide bits and compare those to domains sold on ME.
+2. It uses [solana.py](https://michaelhly.github.io/solana-py/) to set up a WebSocket connection to Bonfida program.
 3. If there's a new update, the script runs an update function to gather the new information.
 4. If there's a positive expected income, the script will open a page where you can buy the domain in one click.
 5. The script will also send you a message to your Telegram if you have set up the notifications.
