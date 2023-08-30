@@ -10,6 +10,9 @@ from utils.methods import (
     print_out_dim,
 )
 
+class ArbState:
+    def __init__(self):
+        self.last_positive_name = None
 
 async def run_bot_cli(telegram_bot: bool = False):
     """
@@ -18,10 +21,11 @@ async def run_bot_cli(telegram_bot: bool = False):
     Input: None
     Returns: None
     """
+    arb_state = ArbState() # Create an instance of the class to keep track of the last positive name
     while True:
         try:
             df = display_data_tabulate()
-            await check_for_positives(df, telegram_status=telegram_bot)
+            await check_for_positives(df, telegram_status=telegram_bot, arb_state=arb_state) # Check for positives, pass the state
             print_out_dim("Connecting to the websocket")
             program_pub_key = Pubkey.from_string(
                 "85iDfUvr3HJyLM2zcq5BXSiDvUWfw6cSE1FfNBo8Ap29"
@@ -36,7 +40,7 @@ async def run_bot_cli(telegram_bot: bool = False):
                     print_out_dim("Updating...")
                     run_arbs_parse()
                     df = display_data_tabulate()
-                    await check_for_positives(df, telegram_status=telegram_bot)
+                    await check_for_positives(df, telegram_status=telegram_bot, arb_state=arb_state)
         except asyncio.exceptions.TimeoutError:
             print_out_dim("Connection timed out. Retrying...")
             continue
